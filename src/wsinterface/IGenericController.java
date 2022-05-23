@@ -52,7 +52,7 @@ public interface IGenericController<T> {
 	 * 
 	 * @author Matheus Eduardo França - matheusefranca1727@gmail.com
 	 */
-	public Response update();
+	public Response update(T request);
 
 	/**
 	 * @description Deleta um dado utilizando o id.
