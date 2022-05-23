@@ -1,0 +1,62 @@
+
+CREATE DATABASE ibicos_db
+
+USE ibicos_db
+
+CREATE TABLE bicos_category (
+	id INT NOT NULL AUTO_INCREMENT,
+	description VARCHAR(250) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE user (
+	id INT NOT NULL AUTO_INCREMENT,
+	name VARCHAR(150) NOT NULL,
+	email VARCHAR(250) UNIQUE NOT NULL,
+	password VARCHAR(250) NOT NULL,
+	phone VARCHAR(11) UNIQUE NOT NULL,
+	type VARCHAR(1) NOT NULL,      # P(prestador) ou C(cliente)
+	status VARCHAR(1) NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE post_bicos (
+	id INT NOT NULL AUTO_INCREMENT,
+	id_user INT NOT NULL,           # Id de usuários somentes do tipo C
+	title VARCHAR(250) NOT NULL,
+	description VARCHAR(250) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,	
+
+	PRIMARY KEY(id),
+	FOREIGN KEY(id_user) REFERENCES user(id)
+);
+
+CREATE TABLE user_has_bicos_category (
+	id_user INT NOT NULL,
+	id_bicos_category INT NOT NULL,
+
+	FOREIGN KEY(id_user) REFERENCES user(id),
+	FOREIGN KEY(id_bicos_category) REFERENCES bicos_category(id)
+);
+
+CREATE TABLE offer_bicos (
+	id INT NOT NULL AUTO_INCREMENT,
+	id_post_bicos INT NOT NULL,
+	id_user INT NOT NULL,        # Id de usuários somente do tipo P
+	description VARCHAR(250) NOT NULL,
+	price DOUBLE(8,2) NOT NULL,
+	status VARCHAR(1) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+	PRIMARY KEY(id),
+	FOREIGN KEY(id_post_bicos) REFERENCES post_bicos(id),
+	FOREIGN KEY(id_user) REFERENCES user(id)
+);
