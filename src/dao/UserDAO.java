@@ -35,6 +35,8 @@ public class UserDAO {
 				user.setName(rs.getString("name"));
 				user.setEmail(rs.getString("email"));
 				user.setPhone(rs.getString("phone"));
+				user.setType(rs.getString("type"));
+				user.setStatus(rs.getString("status"));
 
 				listUser.add(user);
 			}
@@ -52,7 +54,7 @@ public class UserDAO {
 
 	public User findById(int id) {
 
-		String sql = "SELECT id, name, email, phone FROM user WHERE id = ?";
+		String sql = "SELECT id, name, email, phone, type, status FROM user WHERE id = ?";
 
 		try {
 			PreparedStatement ps = this.conexao.prepareStatement(sql);
@@ -66,6 +68,8 @@ public class UserDAO {
 			user.setName(rs.getString("name"));
 			user.setEmail(rs.getString("email"));
 			user.setPhone(rs.getString("phone"));
+			user.setType(rs.getString("type"));
+			user.setStatus(rs.getString("status"));
 
 			ps.close();
 
@@ -92,6 +96,60 @@ public class UserDAO {
 			ps.setString(4, hash.encript(user.getPassword()));
 			ps.setString(5, user.getType());
 			ps.setString(6, "A");
+
+			ps.execute();
+			ps.close();
+
+			return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			String messageError = "message_error: " + e.getMessage() + ", type_error_sql: " + e.getErrorCode();
+
+			return messageError;
+		}
+
+	}
+
+	public String update(User user) {
+
+		String sql = "UPDATE user SET name = ?, email = ?, phone = ?, type = ?, status = ? WHERE id = ?";
+
+		try {
+			PreparedStatement ps = this.conexao.prepareStatement(sql);
+			ps.setString(1, user.getName());
+			ps.setString(2, user.getEmail());
+			ps.setString(3, user.getPhone());
+			ps.setString(4, user.getType());
+			ps.setString(5, user.getStatus());
+			ps.setInt(6, user.getId());
+			
+			System.out.println(ps);
+			System.out.println(user);
+
+			ps.execute();
+			ps.close();
+
+			return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			String messageError = "message_error: " + e.getMessage() + ", type_error_sql: " + e.getErrorCode();
+
+			return messageError;
+		}
+
+	}
+
+	public String delete(int id) {
+
+		String sql = "DELETE FROM user WHERE id = ?";
+
+		try {
+			PreparedStatement ps = this.conexao.prepareStatement(sql);
+			ps.setInt(1, id);
 
 			ps.execute();
 			ps.close();
