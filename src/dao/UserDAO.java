@@ -124,9 +124,6 @@ public class UserDAO {
 			ps.setString(4, user.getType());
 			ps.setString(5, user.getStatus());
 			ps.setInt(6, user.getId());
-			
-			System.out.println(ps);
-			System.out.println(user);
 
 			ps.execute();
 			ps.close();
